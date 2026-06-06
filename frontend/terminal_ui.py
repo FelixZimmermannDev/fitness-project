@@ -20,6 +20,7 @@ class TerminalUI:
         for part in parts:
             try:
                 reps.append(int(part))  #Try ob userinput eine zahl ist
+
             except ValueError:
                 return None
 
@@ -56,7 +57,8 @@ class TerminalUI:
             return
 
         for index, workout in enumerate(self.tracker.get_workouts(), start=1):
-            print(f"{index}. {workout.name} - {workout.reps} reps")
+            reps_text = ", ".join(str(rep) for rep in workout.reps)
+            print(f"{index}. {workout.name} - {reps_text} reps")
 
     #Add_Workout
     def input_workout_name(self):
