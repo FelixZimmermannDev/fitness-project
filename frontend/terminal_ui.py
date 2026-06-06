@@ -22,13 +22,22 @@ class TerminalUI:
         print("4. Change workouts")
         print("5. Exit")
 
+    def show_workouts(self):
+        print("Current workouts:")
+
+        for workout in self.tracker.workouts:
+            print(workout)
+
     def input_menu_choice(self):
         return self.parse_amount(input("Enter menu choice: "))
 
     def handle_menu_choice(self, choice):
-        #choice = kommt in run()
         if choice == 1:
             self.handle_add_workout()
+        if choice == 2:
+            pass
+        if choice == 3:
+            self.show_workouts()
 
     #Add_Workout
     def input_workout_name(self):
@@ -51,6 +60,19 @@ class TerminalUI:
 
 
     #Flow
-
     def run(self):
-        pass
+        while True:
+            self.show_menu()
+            choice = self.input_menu_choice()
+
+            if choice is None:
+                print("Invalid choice!")
+                continue
+
+            if choice == 5:
+                print("Exiting...")
+                break
+
+            self.handle_menu_choice(choice)
+
+

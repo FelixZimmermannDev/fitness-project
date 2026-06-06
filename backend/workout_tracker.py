@@ -6,7 +6,6 @@ class WorkoutTracker:
         self.workouts = []
 
     #Add_Workout
-
     def add_workout(self, name, reps):
         workout = Workout(name, reps)
         self.workouts.append(workout)
