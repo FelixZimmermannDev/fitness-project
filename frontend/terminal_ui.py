@@ -13,7 +13,7 @@ class TerminalUI:
         except ValueError:
             return None
 
-    #Userchoice
+    #Menu
     def show_menu(self):
         print("Welcome to the Terminal UI!\n")
         print("1. Add workout")
@@ -22,12 +22,6 @@ class TerminalUI:
         print("4. Change workouts")
         print("5. Exit")
 
-    def show_workouts(self):
-        print("Current workouts:")
-
-        for workout in self.tracker.workouts:
-            print(workout)
-
     def input_menu_choice(self):
         return self.parse_amount(input("Enter menu choice: "))
 
@@ -35,9 +29,20 @@ class TerminalUI:
         if choice == 1:
             self.handle_add_workout()
         if choice == 2:
-            pass
+            self.handle_remove_workout()
         if choice == 3:
             self.show_workouts()
+
+    #Show_Workouts
+    def show_workouts(self):
+        print("Current workouts:")
+
+        if not self.tracker.has_workouts():
+            print("No current workouts")
+            return
+
+        for index, workout in enumerate(self.tracker.get_workouts(), start=1):
+            print(f"{index}. {workout.name} - {workout.reps} reps")
 
     #Add_Workout
     def input_workout_name(self):
@@ -57,7 +62,25 @@ class TerminalUI:
         self.tracker.add_workout(name, reps)
         print("Workout added!")
 
+    #Remove_Workout
+    def input_remove_workout(self):
+        return self.parse_amount(input("Enter workout number to remove: "))
 
+    def handle_remove_workout(self):
+        self.show_workouts()
+
+        number = self.input_remove_workout()
+
+        if number is None:
+            print("Invalid workout name")
+            return
+
+        index = number - 1
+
+        if self.tracker.remove_workout(index):
+            print("Workout removed!")
+        else:
+            print("Workout not found")
 
     #Flow
     def run(self):
@@ -65,8 +88,8 @@ class TerminalUI:
             self.show_menu()
             choice = self.input_menu_choice()
 
-            if choice is None:
-                print("Invalid choice!")
+            if choice not in [1, 2, 3, 4, 5]:
+                print("Invalid choice")
                 continue
 
             if choice == 5:
@@ -74,5 +97,3 @@ class TerminalUI:
                 break
 
             self.handle_menu_choice(choice)
-
-
