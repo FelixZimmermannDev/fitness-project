@@ -13,6 +13,18 @@ class TerminalUI:
         except ValueError:
             return None
 
+    def parse_reps(self, user_input):
+        parts = user_input.strip().split()
+        reps = []
+
+        for part in parts:
+            try:
+                reps.append(int(part))  #Try ob userinput eine zahl ist
+            except ValueError:
+                return None
+
+        return reps     #Return die Liste
+
     #Menu
     def show_menu(self):
         print("Welcome to the Terminal UI!\n")
@@ -51,7 +63,7 @@ class TerminalUI:
         return input("Enter workout name: ")
 
     def input_workout_reps(self):
-        return self.parse_amount(input("Enter workout reps: "))
+        return self.parse_reps(input("Enter workout reps: "))
 
     def handle_add_workout(self):
         name = self.input_workout_name().strip().lower()
@@ -80,7 +92,7 @@ class TerminalUI:
         number = self.input_remove_workout()
 
         if number is None:
-            print("Invalid workout number)
+            print("Invalid workout number")
             return
 
         index = number - 1
