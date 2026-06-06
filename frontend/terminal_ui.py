@@ -32,6 +32,8 @@ class TerminalUI:
             self.handle_remove_workout()
         if choice == 3:
             self.show_workouts()
+        if choice == 4:
+            self.handle_update_workout()
 
     #Show_Workouts
     def show_workouts(self):
@@ -53,6 +55,12 @@ class TerminalUI:
 
     def handle_add_workout(self):
         name = self.input_workout_name().strip().lower()
+        name = name.capitalize()
+
+        if len(name.split()) != 1:
+            print("Workout name must contain only one word")
+            return
+
         reps = self.input_workout_reps()
 
         if reps is None:
@@ -72,7 +80,7 @@ class TerminalUI:
         number = self.input_remove_workout()
 
         if number is None:
-            print("Invalid workout name")
+            print("Invalid workout number)
             return
 
         index = number - 1
@@ -81,6 +89,32 @@ class TerminalUI:
             print("Workout removed!")
         else:
             print("Workout not found")
+
+    #Update_Workout
+    def input_update_workout(self):
+        return self.parse_amount(input("Enter workout number to update: "))
+
+    def handle_update_workout(self):
+        self.show_workouts()
+
+        number = self.input_update_workout()
+
+        if number is None:
+            print("Invalid workout number")
+            return
+
+        index = number - 1
+        reps = self.input_workout_reps()
+
+        if reps is None:
+            print("Invalid Reps")
+            return
+
+        if self.tracker.update_workout(index, reps):
+            print("Workout updated!")
+        else:
+            print("Workout not found")
+
 
     #Flow
     def run(self):

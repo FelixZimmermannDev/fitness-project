@@ -24,20 +24,20 @@ def test_has_workouts_returns_true_when_not_empty():
     assert tracker.has_workouts() is True
 
 
-def test_can_remove_workout_with_valid_index():
+def test_has_valid_index_with_valid_index():
     tracker = WorkoutTracker()
 
     tracker.add_workout("pushups", 15)
 
-    assert tracker.can_remove_workout(0) is True
+    assert tracker.has_valid_index(0) is True
 
 
-def test_can_remove_workout_with_invalid_index():
+def test_has_valid_index_with_invalid_index():
     tracker = WorkoutTracker()
 
     tracker.add_workout("pushups", 15)
 
-    assert tracker.can_remove_workout(5) is False
+    assert tracker.has_valid_index(5) is False
 
 
 def test_remove_workout():
@@ -60,3 +60,25 @@ def test_remove_workout_invalid_index():
 
     assert result is False
     assert len(tracker.get_workouts()) == 1
+
+
+def test_update_workout():
+    tracker = WorkoutTracker()
+
+    tracker.add_workout("push", 15)
+
+    result = tracker.update_workout(0, 25)
+
+    assert result is True
+    assert tracker.get_workouts()[0].reps == 25
+
+
+def test_update_workout_invalid_index():
+    tracker = WorkoutTracker()
+
+    tracker.add_workout("push", 15)
+
+    result = tracker.update_workout(99, 25)
+
+    assert result is False
+    assert tracker.get_workouts()[0].reps == 15

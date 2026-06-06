@@ -20,7 +20,7 @@ class WorkoutTracker:
         return True
 
     #Remove_Workout
-    def can_remove_workout(self, index):
+    def has_valid_index(self, index):
         if index < 0:
             return False
 
@@ -30,8 +30,16 @@ class WorkoutTracker:
         return True
 
     def remove_workout(self, index):
-        if not self.can_remove_workout(index):
+        if not self.has_valid_index(index):
             return False
 
         self.workouts.pop(index)
-        return True #Was genau macht pop? und wie heisst dieser art von sache, also .append .remove usw
+        return True
+
+    #Update_Workout
+    def update_workout(self, index, reps):
+        if not self.has_valid_index(index):
+            return False
+
+        self.workouts[index].reps = reps
+        return True

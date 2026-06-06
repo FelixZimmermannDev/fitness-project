@@ -4,6 +4,9 @@ class Workout:
         self.name = name
         self.reps = reps
 
+    def get_total_reps(self):
+        return sum(self.reps)
+
         #Name offensichtlich, version sowas wie leicht, mittel, schwer
         #Speater noch Kategorie
         #Speater noch Punktesystem.
