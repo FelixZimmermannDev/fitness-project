@@ -46,13 +46,13 @@ class WorkoutTracker:
 
     #Summary_Workout
     def get_total_workouts(self):
-        return len(self.workouts)   #Anzahl an Workouts
+        return len(self.workouts) #Returned anzahl der workouts gespeichert
 
-    def get_workout_reps(self):
+    def get_total_reps(self):
         total = 0
 
-        for workout in self.workouts:
-            total += sum(workout.reps)
+        for workout in self.workouts:   #Geht liste durch
+            total += sum(workout.reps)       #Added Total abhaengig wv reps in Liste stehen
 
         return total
 
@@ -62,6 +62,7 @@ class WorkoutTracker:
         for workout in self.workouts:
             if workout.name not in summary:
                 summary[workout.name] = 0
+
             summary[workout.name] += sum(workout.reps)
 
         return summary
