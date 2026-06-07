@@ -30,6 +30,24 @@ def test_parse_reps_returns_none_when_one_value_is_invalid():
     assert ui.parse_reps("15 invalid 10") is None
 
 
+def test_parse_reps_returns_none_for_empty_input():
+    ui = create_ui()
+
+    assert ui.parse_reps("   ") is None
+
+
+def test_parse_reps_returns_none_when_one_value_is_zero():
+    ui = create_ui()
+
+    assert ui.parse_reps("15 0 10") is None
+
+
+def test_parse_reps_returns_none_when_one_value_is_negative():
+    ui = create_ui()
+
+    assert ui.parse_reps("15 -2 10") is None
+
+
 def test_show_workouts_prints_empty_message(capsys):
     ui = create_ui()
 
@@ -113,3 +131,95 @@ def test_handle_search_workout_prints_not_found(monkeypatch, capsys):
     ui.handle_search_workout()
 
     assert capsys.readouterr().out == "Workout not found\n"
+
+
+def test_show_filter_menu_prints_filter_options(capsys):
+    ui = create_ui()
+
+    ui.show_filter_menu()
+
+    assert capsys.readouterr().out == (
+        "1. Filter for minimum total reps\n"
+        "2. Filter for maximum total reps\n"
+    )
+
+
+def test_handle_filter_workouts_by_reps_prints_min_results(monkeypatch, capsys):
+    tracker = WorkoutTracker()
+    tracker.add_workout("Pushups", [15, 12])
+    tracker.add_workout("Squats", [20, 20])
+    tracker.add_workout("Pullups", [5, 5])
+    ui = TerminalUI(tracker)
+    inputs = iter(["1", "20"])
+    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+
+    ui.handle_filter_workouts_by_reps()
+
+    assert capsys.readouterr().out == (
+        "1. Filter for minimum total reps\n"
+        "2. Filter for maximum total reps\n"
+        "Pushups - 15, 12 reps\n"
+        "Squats - 20, 20 reps\n"
+    )
+
+
+def test_handle_filter_workouts_by_reps_prints_max_results(monkeypatch, capsys):
+    tracker = WorkoutTracker()
+    tracker.add_workout("Pushups", [15, 12])
+    tracker.add_workout("Squats", [20, 20])
+    tracker.add_workout("Pullups", [5, 5])
+    ui = TerminalUI(tracker)
+    inputs = iter(["2", "27"])
+    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+
+    ui.handle_filter_workouts_by_reps()
+
+    assert capsys.readouterr().out == (
+        "1. Filter for minimum total reps\n"
+        "2. Filter for maximum total reps\n"
+        "Pushups - 15, 12 reps\n"
+        "Pullups - 5, 5 reps\n"
+    )
+
+
+def test_handle_filter_workouts_by_reps_prints_not_found(monkeypatch, capsys):
+    tracker = WorkoutTracker()
+    tracker.add_workout("Pushups", [15, 12])
+    ui = TerminalUI(tracker)
+    inputs = iter(["1", "50"])
+    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+
+    ui.handle_filter_workouts_by_reps()
+
+    assert capsys.readouterr().out == (
+        "1. Filter for minimum total reps\n"
+        "2. Filter for maximum total reps\n"
+        "No workouts found\n"
+    )
+
+
+def test_handle_filter_workouts_by_reps_rejects_invalid_choice(monkeypatch, capsys):
+    ui = create_ui()
+    monkeypatch.setattr("builtins.input", lambda _: "3")
+
+    ui.handle_filter_workouts_by_reps()
+
+    assert capsys.readouterr().out == (
+        "1. Filter for minimum total reps\n"
+        "2. Filter for maximum total reps\n"
+        "Invalid choice\n"
+    )
+
+
+def test_handle_filter_workouts_by_reps_rejects_invalid_reps(monkeypatch, capsys):
+    ui = create_ui()
+    inputs = iter(["1", "abc"])
+    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+
+    ui.handle_filter_workouts_by_reps()
+
+    assert capsys.readouterr().out == (
+        "1. Filter for minimum total reps\n"
+        "2. Filter for maximum total reps\n"
+        "Invalid Reps\n"
+    )

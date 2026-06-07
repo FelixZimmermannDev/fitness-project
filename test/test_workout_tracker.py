@@ -169,3 +169,49 @@ def test_has_workouts_by_name_returns_false_when_missing():
     tracker.add_workout("Pushups", [15])
 
     assert tracker.has_workouts_by_name("Squats") is False
+
+
+def test_get_workouts_with_min_total_reps_returns_matching_workouts():
+    tracker = WorkoutTracker()
+
+    tracker.add_workout("Pushups", [15, 12])
+    tracker.add_workout("Squats", [20, 20])
+    tracker.add_workout("Pullups", [5, 5])
+
+    results = tracker.get_workouts_with_min_total_reps(20)
+
+    assert len(results) == 2
+    assert results[0].name == "Pushups"
+    assert results[1].name == "Squats"
+
+
+def test_get_workouts_with_min_total_reps_returns_empty_list_when_missing():
+    tracker = WorkoutTracker()
+
+    tracker.add_workout("Pushups", [15, 12])
+    tracker.add_workout("Pullups", [5, 5])
+
+    assert tracker.get_workouts_with_min_total_reps(50) == []
+
+
+def test_get_workouts_with_max_total_reps_returns_matching_workouts():
+    tracker = WorkoutTracker()
+
+    tracker.add_workout("Pushups", [15, 12])
+    tracker.add_workout("Squats", [20, 20])
+    tracker.add_workout("Pullups", [5, 5])
+
+    results = tracker.get_workouts_with_max_total_reps(27)
+
+    assert len(results) == 2
+    assert results[0].name == "Pushups"
+    assert results[1].name == "Pullups"
+
+
+def test_get_workouts_with_max_total_reps_returns_empty_list_when_missing():
+    tracker = WorkoutTracker()
+
+    tracker.add_workout("Pushups", [15, 12])
+    tracker.add_workout("Squats", [20, 20])
+
+    assert tracker.get_workouts_with_max_total_reps(5) == []

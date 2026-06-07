@@ -83,3 +83,25 @@ class WorkoutTracker:
 
         return len(results) > 0
 
+    #Filter_Reps
+    def get_workouts_with_min_total_reps(self, min_reps):
+        results = []
+
+        for workout in self.workouts:
+            total_reps = sum(workout.reps)
+
+            if total_reps >= min_reps:
+                results.append(workout)
+
+        return results
+
+    def get_workouts_with_max_total_reps(self, max_reps):
+        results = []
+
+        for workout in self.workouts:
+            total_reps = sum(workout.reps)
+
+            if total_reps <= max_reps:
+                results.append(workout)
+
+        return results

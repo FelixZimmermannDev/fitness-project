@@ -4,7 +4,7 @@ class TerminalUI:
         self.tracker = tracker
 
     #Parse
-    def parse_amount(self, user_input):
+    def parse_amount(self, user_input): #Als Einzelwert
         user_input = user_input.strip()
 
         try:
@@ -13,22 +13,24 @@ class TerminalUI:
         except ValueError:
             return None
 
-    def parse_reps(self, user_input):
+    def parse_reps(self, user_input):   #Als Liste
         parts = user_input.strip().split()
 
         if len(parts) == 0:
-            return None
-
-        if int(part) <= 0:
             return None
 
         reps = []
 
         for part in parts:
             try:
-                reps.append(int(part))
+                rep = int(part)
             except ValueError:
                 return None
+
+            if rep <= 0:
+                return None
+
+            reps.append(rep)
 
         return reps
 
@@ -42,6 +44,7 @@ class TerminalUI:
         print("5. Show summary")
         print("6. Exit")
         print("7. Search workout")
+        print("8. Filter by reps")
 
     def input_menu_choice(self):
         return self.parse_amount(input("Enter menu choice: "))
@@ -49,16 +52,18 @@ class TerminalUI:
     def handle_menu_choice(self, choice):
         if choice == 1:
             self.handle_add_workout()
-        if choice == 2:
+        elif choice == 2:
             self.handle_remove_workout()
-        if choice == 3:
+        elif choice == 3:
             self.show_workouts()
-        if choice == 4:
+        elif choice == 4:
             self.handle_update_workout()
-        if choice == 5:
+        elif choice == 5:
             self.show_summary()
-        if choice == 7:
+        elif choice == 7:
             self.handle_search_workout()
+        elif choice == 8:
+            self.handle_filter_workouts_by_reps()
 
     #Show_Workouts
     def show_workouts(self):
@@ -184,7 +189,55 @@ class TerminalUI:
             reps_text = ', '.join(str(rep) for rep in workout.reps)
             print(f"{workout.name} - {reps_text} reps")
 
+    #Filter_Reps
+    def input_filter_total_reps(self):
+        return self.parse_amount(input("Enter total reps: "))
 
+    def show_filter_menu(self):
+        print("1. Filter for minimum total reps")
+        print("2. Filter for maximum total reps")
+
+    def input_filter_choice(self):
+        return self.parse_amount(input("Enter filter choice: "))
+
+    def handle_filter_workouts_by_reps(self):
+        self.show_filter_menu()
+
+        choice = self.input_filter_choice()
+
+        if choice is None:
+            print("Invalid choice")
+            return
+
+        if choice == 1:
+            min_reps = self.input_filter_total_reps()
+
+            if min_reps is None:
+                print("Invalid Reps")
+                return
+
+            results = self.tracker.get_workouts_with_min_total_reps(min_reps)
+
+        elif choice == 2:
+            max_reps = self.input_filter_total_reps()
+
+            if max_reps is None:
+                print("Invalid Reps")
+                return
+
+            results = self.tracker.get_workouts_with_max_total_reps(max_reps)
+
+        else:
+            print("Invalid choice")
+            return
+
+        if len(results) == 0:
+            print("No workouts found")
+            return
+
+        for workout in results:
+            reps_text = ", ".join(str(rep) for rep in workout.reps)
+            print(f"{workout.name} - {reps_text} reps")
 
     #Flow
     def run(self):
@@ -192,7 +245,7 @@ class TerminalUI:
             self.show_menu()
             choice = self.input_menu_choice()
 
-            if choice not in [1, 2, 3, 4, 5, 6, 7]:
+            if choice not in [1, 2, 3, 4, 5, 6, 7, 8]:
                 print("Invalid choice")
                 continue
 
