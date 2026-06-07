@@ -15,16 +15,22 @@ class TerminalUI:
 
     def parse_reps(self, user_input):
         parts = user_input.strip().split()
+
+        if len(parts) == 0:
+            return None
+
+        if int(part) <= 0:
+            return None
+
         reps = []
 
         for part in parts:
             try:
-                reps.append(int(part))  #Try ob userinput eine zahl ist
-
+                reps.append(int(part))
             except ValueError:
                 return None
 
-        return reps     #Return die Liste
+        return reps
 
     #Menu
     def show_menu(self):
@@ -178,7 +184,7 @@ class TerminalUI:
             reps_text = ', '.join(str(rep) for rep in workout.reps)
             print(f"{workout.name} - {reps_text} reps")
 
-    
+
 
     #Flow
     def run(self):
