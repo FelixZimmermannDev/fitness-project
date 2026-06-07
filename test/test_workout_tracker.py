@@ -215,3 +215,43 @@ def test_get_workouts_with_max_total_reps_returns_empty_list_when_missing():
     tracker.add_workout("Squats", [20, 20])
 
     assert tracker.get_workouts_with_max_total_reps(5) == []
+
+
+def test_has_workouts_with_min_total_reps():
+    tracker = WorkoutTracker()
+
+    tracker.add_workout("Push", [10, 10, 5])
+    tracker.add_workout("Pull", [8, 8])
+
+    assert tracker.has_workouts_with_min_total_reps(20) is True
+    assert tracker.has_workouts_with_min_total_reps(40) is False
+
+
+def test_has_workout_with_max_total_reps():
+    tracker = WorkoutTracker()
+
+    tracker.add_workout("Push", [10, 10, 5])
+    tracker.add_workout("Pull", [8, 8])
+
+    assert tracker.has_workout_with_max_total_reps(20) is True
+    assert tracker.has_workout_with_max_total_reps(10) is False
+
+
+def test_has_workouts_with_min_total_reps():
+    tracker = WorkoutTracker()
+
+    tracker.add_workout("Push", [10, 10, 5])
+    tracker.add_workout("Pull", [8, 8])
+
+    assert tracker.has_workouts_with_min_total_reps(20) is True
+    assert tracker.has_workouts_with_min_total_reps(40) is False
+
+
+def test_has_workout_with_max_total_reps_alias():
+    tracker = WorkoutTracker()
+
+    tracker.add_workout("Push", [10, 10, 5])
+    tracker.add_workout("Pull", [8, 8])
+
+    assert tracker.has_workout_with_max_total_reps(20) is True
+    assert tracker.has_workout_with_max_total_reps(10) is False

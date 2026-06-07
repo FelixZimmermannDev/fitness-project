@@ -34,6 +34,17 @@ class TerminalUI:
 
         return reps
 
+    def parse_name(self, user_input):
+        name = user_input.strip().lower().capitalize()
+
+        if len(name.split()) != 1:
+            return None         #If mehr als 1 Wort
+
+        if not name.isalpha():
+            return None
+
+        return name
+
     #Menu
     def show_menu(self):
         print("Welcome to the Terminal UI!\n")
@@ -79,7 +90,7 @@ class TerminalUI:
 
     #Add_Workout
     def input_workout_name(self):
-        return input("Enter workout name: ")
+        return self.parse_name(input("Enter workout name: "))
 
     def input_workout_reps(self):
         return self.parse_reps(input("Enter workout reps: "))
@@ -162,12 +173,11 @@ class TerminalUI:
 
     #Search_Workout
     def input_search_workout(self):
-        name = self.input_workout_name().strip().lower()
-        name = name.capitalize()
+        name = self.input_workout_name()
 
-        if len(name.split()) != 1:
-            print("Workout name must contain only one word")
-            return None
+        if name is None:
+            print("Invalid workout name")
+            return
 
         return name
 
@@ -177,11 +187,11 @@ class TerminalUI:
         if name is None:
             return
 
-        if not self.tracker.has_workouts_by_name(name):
+        results = self.tracker.get_workouts_by_name(name)
+
+        if len(results) == 0:
             print("Workout not found")
             return
-
-        results = self.tracker.get_workouts_by_name(name)
 
         print("Found!")
 

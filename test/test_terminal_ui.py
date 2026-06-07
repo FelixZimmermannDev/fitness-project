@@ -30,6 +30,24 @@ def test_parse_reps_returns_none_when_one_value_is_invalid():
     assert ui.parse_reps("15 invalid 10") is None
 
 
+def test_parse_name_returns_capitalized_single_word():
+    ui = create_ui()
+
+    assert ui.parse_name(" pushups ") == "Pushups"
+
+
+def test_parse_name_returns_none_for_multiple_words():
+    ui = create_ui()
+
+    assert ui.parse_name("push ups") is None
+
+
+def test_parse_name_returns_none_for_non_alpha_characters():
+    ui = create_ui()
+
+    assert ui.parse_name("pushups1") is None
+
+
 def test_parse_reps_returns_none_for_empty_input():
     ui = create_ui()
 
@@ -72,6 +90,24 @@ def test_show_workouts_prints_numbered_workouts(capsys):
     )
 
 
+def test_show_menu_includes_search_and_filter_options(capsys):
+    ui = create_ui()
+
+    ui.show_menu()
+
+    assert capsys.readouterr().out == (
+        "Welcome to the Terminal UI!\n\n"
+        "1. Add workout\n"
+        "2. Remove workout\n"
+        "3. Show workouts\n"
+        "4. Change workouts\n"
+        "5. Show summary\n"
+        "6. Exit\n"
+        "7. Search workout\n"
+        "8. Filter by reps\n"
+    )
+
+
 def test_show_summary_prints_totals_and_grouped_reps(capsys):
     tracker = WorkoutTracker()
     tracker.add_workout("Pushups", [15, 12])
@@ -102,7 +138,7 @@ def test_input_search_workout_rejects_multiple_words(monkeypatch, capsys):
     monkeypatch.setattr("builtins.input", lambda _: "push ups")
 
     assert ui.input_search_workout() is None
-    assert capsys.readouterr().out == "Workout name must contain only one word\n"
+    assert capsys.readouterr().out == "Invalid workout name\n"
 
 
 def test_handle_search_workout_prints_matching_workouts(monkeypatch, capsys):

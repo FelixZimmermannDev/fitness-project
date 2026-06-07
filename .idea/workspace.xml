@@ -8,7 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/workout_tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/workout_tracker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/terminal_ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/terminal_ui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/test_terminal_ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_terminal_ui.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/test_workout_tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_workout_tracker.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

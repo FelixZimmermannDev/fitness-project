@@ -95,6 +95,11 @@ class WorkoutTracker:
 
         return results
 
+    def has_workouts_with_min_total_reps(self, min_reps):
+        results = self.get_workouts_with_min_total_reps(min_reps)
+
+        return len(results) > 0
+
     def get_workouts_with_max_total_reps(self, max_reps):
         results = []
 
@@ -105,3 +110,8 @@ class WorkoutTracker:
                 results.append(workout)
 
         return results
+
+    def has_workout_with_max_total_reps(self, max_reps):
+        results = self.get_workouts_with_max_total_reps(max_reps)
+
+        return len(results) > 0
