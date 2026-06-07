@@ -35,6 +35,7 @@ class TerminalUI:
         print("4. Change workouts")
         print("5. Show summary")
         print("6. Exit")
+        print("7. Search workout")
 
     def input_menu_choice(self):
         return self.parse_amount(input("Enter menu choice: "))
@@ -50,6 +51,8 @@ class TerminalUI:
             self.handle_update_workout()
         if choice == 5:
             self.show_summary()
+        if choice == 7:
+            self.handle_search_workout()
 
     #Show_Workouts
     def show_workouts(self):
@@ -146,13 +149,44 @@ class TerminalUI:
         for name, reps in summary.items():
             print(f"{name}: {reps} reps")
 
+    #Search_Workout
+    def input_search_workout(self):
+        name = self.input_workout_name().strip().lower()
+        name = name.capitalize()
+
+        if len(name.split()) != 1:
+            print("Workout name must contain only one word")
+            return None
+
+        return name
+
+    def handle_search_workout(self):
+        name = self.input_search_workout()
+
+        if name is None:
+            return
+
+        if not self.tracker.has_workouts_by_name(name):
+            print("Workout not found")
+            return
+
+        results = self.tracker.get_workouts_by_name(name)
+
+        print("Found!")
+
+        for workout in results:
+            reps_text = ', '.join(str(rep) for rep in workout.reps)
+            print(f"{workout.name} - {reps_text} reps")
+
+    
+
     #Flow
     def run(self):
         while True:
             self.show_menu()
             choice = self.input_menu_choice()
 
-            if choice not in [1, 2, 3, 4, 5, 6]:
+            if choice not in [1, 2, 3, 4, 5, 6, 7]:
                 print("Invalid choice")
                 continue
 

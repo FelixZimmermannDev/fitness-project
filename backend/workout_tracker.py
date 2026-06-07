@@ -3,7 +3,7 @@ from backend.workout import Workout
 class WorkoutTracker:
 
     def __init__(self):
-        self.workouts = []  #Hier stehen workout.reps und workout.name drin
+        self.workouts = []  #Durch Workout.py eine Liste von OBJEKTEN, nicht Strings
 
     #Show_Workouts
     def get_workouts(self):
@@ -66,3 +66,21 @@ class WorkoutTracker:
             summary[workout.name] += sum(workout.reps)
 
         return summary
+
+    #Search_Workout
+    def get_workouts_by_name(self, name):
+
+        results = []
+
+        for workout in self.workouts:
+            if workout.name == name:
+                results.append(workout)
+
+        return results
+        #Was mich noch verwirrt ist die verwendung unter workout.name, also ich checke dass das mit der anderen Datei Workout(name, reps) zu tun hat aber ist das weil wir hier in add_workout workout = abfragen und man dann immer workout. verwenden kann und wenn die abfrage nicht waere dann nicht?
+
+    def has_workouts_by_name(self, name):
+        results = self.get_workouts_by_name(name)
+
+        return len(results) > 0
+
