@@ -1,16 +1,17 @@
 from frontend.parsers import (
-    parse_amount,
     parse_positive_amount,
     parse_index,
     parse_choice,
     parse_name,
     parse_list,
 )
+from backend.workout_stats import WorkoutStats
 
 class TerminalUI:
 
     def __init__(self, tracker):
         self.tracker = tracker
+        self.stats = WorkoutStats(tracker)
 
     #Menu
     def show_menu(self):
@@ -53,7 +54,7 @@ class TerminalUI:
 
         for index, workout in enumerate(self.tracker.get_workouts(), start=1):
             reps_text = ", ".join(str(rep) for rep in workout.reps)
-            print(f"{index}. {workout.name} - {reps_text} reps")
+            print(f"{index}. {self.format_workout(workout)}")
 
     #Add_Workout
     def input_workout_name(self):
@@ -126,16 +127,16 @@ class TerminalUI:
             print("No workouts available")
             return
 
-        total_workouts = self.tracker.get_total_workouts()
-        total_reps = self.tracker.get_total_reps()
-        highest_total_reps = self.tracker.get_highest_total_reps()
-        lowest_total_reps = self.tracker.get_lowest_total_reps()
-        highest_total_reps_by_name = self.tracker.get_highest_total_reps_by_name()
-        lowest_total_reps_by_name = self.tracker.get_lowest_total_reps_by_name()
-        workout_with_highest_total_reps = self.tracker.get_workout_with_highest_total_reps()
-        workout_with_lowest_total_reps = self.tracker.get_workout_with_lowest_total_reps()
-        workout_with_most_sets = self.tracker.get_workout_with_most_sets()
-        workout_with_fewest_sets = self.tracker.get_workout_with_fewest_sets()
+        total_workouts = self.stats.get_total_workouts()
+        total_reps = self.stats.get_total_reps()
+        highest_total_reps = self.stats.get_highest_total_reps()
+        lowest_total_reps = self.stats.get_lowest_total_reps()
+        highest_total_reps_by_name = self.stats.get_highest_total_reps_by_name()
+        lowest_total_reps_by_name = self.stats.get_lowest_total_reps_by_name()
+        workout_with_highest_total_reps = self.stats.get_workout_with_highest_total_reps()
+        workout_with_lowest_total_reps = self.stats.get_workout_with_lowest_total_reps()
+        workout_with_most_sets = self.stats.get_workout_with_most_sets()
+        workout_with_fewest_sets = self.stats.get_workout_with_fewest_sets()
 
         print(f"Total workouts: {total_workouts}")
         print(f"Total reps: {total_reps}")
@@ -143,13 +144,13 @@ class TerminalUI:
         print(f"Lowest total reps in one workout: {lowest_total_reps}")
         print(f"Highest total reps by name: {highest_total_reps_by_name}")
         print(f"Lowest total reps by name: {lowest_total_reps_by_name}")
-        print(f"Workout with highest total reps: {workout_with_highest_total_reps}")
-        print(f"Workout with lowest total reps: {workout_with_lowest_total_reps}")
-        print(f"Workout with most sets: {workout_with_most_sets}")
-        print(f"Workout with fewest sets: {workout_with_fewest_sets}")
+        print(f"Workout with highest total reps: {self.format_workout(workout_with_highest_total_reps)}")
+        print(f"Workout with lowest total reps: {self.format_workout(workout_with_lowest_total_reps)}")
+        print(f"Workout with most sets: {self.format_workout(workout_with_most_sets)}")
+        print(f"Workout with fewest sets: {self.format_workout(workout_with_fewest_sets)}")
         print()
 
-        summary = self.tracker.get_total_reps_by_name()
+        summary = self.stats.get_total_reps_by_name()
 
         for name, reps in summary.items():
             print(f"{name}: {reps} reps")
@@ -180,8 +181,11 @@ class TerminalUI:
             return
 
         for workout in results:
-            reps_text = ", ".join(str(rep) for rep in workout.reps)
-            print(f"{workout.name} - {reps_text} reps")
+            print(self.format_workout(workout))
+
+    def format_workout(self, workout):
+        reps_text = ", ".join(str(rep) for rep in workout.reps)
+        return f"{workout.name} - {reps_text} reps"
 
     #Filter_Reps
     def show_filter_menu(self):

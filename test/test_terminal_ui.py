@@ -58,6 +58,14 @@ def test_show_workouts_prints_numbered_workouts(capsys):
     )
 
 
+def test_format_workout_returns_display_text():
+    tracker = WorkoutTracker()
+    tracker.add_workout("Pushups", [15, 12, 10])
+    ui = TerminalUI(tracker)
+
+    assert ui.format_workout(tracker.get_workouts()[0]) == "Pushups - 15, 12, 10 reps"
+
+
 def test_show_menu_includes_search_and_filter_options(capsys):
     ui = create_ui()
 
@@ -93,10 +101,10 @@ def test_show_summary_prints_totals_and_grouped_reps(capsys):
     assert "Lowest total reps in one workout: 10\n" in output
     assert "Highest total reps by name: 37\n" in output
     assert "Lowest total reps by name: 20\n" in output
-    assert "Workout with highest total reps: <backend.workout.Workout object at " in output
-    assert "Workout with lowest total reps: <backend.workout.Workout object at " in output
-    assert "Workout with most sets: <backend.workout.Workout object at " in output
-    assert "Workout with fewest sets: <backend.workout.Workout object at " in output
+    assert "Workout with highest total reps: Pushups - 15, 12 reps\n" in output
+    assert "Workout with lowest total reps: Pushups - 10 reps\n" in output
+    assert "Workout with most sets: Pushups - 15, 12 reps\n" in output
+    assert "Workout with fewest sets: Pushups - 10 reps\n" in output
     assert "Pushups: 37 reps\n" in output
     assert "Squats: 20 reps\n" in output
 

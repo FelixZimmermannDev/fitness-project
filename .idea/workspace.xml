@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="783f370c-f1e9-4721-a43f-02dd26c81413" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/backend/workout_stats.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/workout_tracker.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/workout_tracker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/terminal_ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/terminal_ui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/test_terminal_ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/test_terminal_ui.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,6 +39,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/backend/workout_stats.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/backend/workout_tracker.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/frontend/parsers.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/frontend/terminal_ui.py" root0="SKIP_INSPECTION" />
@@ -83,5 +86,16 @@
       <updated>1780764086905</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
