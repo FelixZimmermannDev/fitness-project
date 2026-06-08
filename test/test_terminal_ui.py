@@ -6,64 +6,32 @@ def create_ui():
     return TerminalUI(WorkoutTracker())
 
 
-def test_parse_amount_returns_integer():
+def test_input_menu_choice_returns_valid_choice(monkeypatch):
     ui = create_ui()
+    monkeypatch.setattr("builtins.input", lambda _: "8")
 
-    assert ui.parse_amount(" 12 ") == 12
+    assert ui.input_menu_choice() == 8
 
 
-def test_parse_amount_returns_none_for_invalid_input():
+def test_input_menu_choice_returns_none_for_invalid_choice(monkeypatch):
     ui = create_ui()
+    monkeypatch.setattr("builtins.input", lambda _: "9")
 
-    assert ui.parse_amount("twelve") is None
+    assert ui.input_menu_choice() is None
 
 
-def test_parse_reps_returns_list_of_integers():
+def test_input_workout_name_returns_parsed_name(monkeypatch):
     ui = create_ui()
+    monkeypatch.setattr("builtins.input", lambda _: " pushups ")
 
-    assert ui.parse_reps("15 12 10") == [15, 12, 10]
+    assert ui.input_workout_name() == "Pushups"
 
 
-def test_parse_reps_returns_none_when_one_value_is_invalid():
+def test_input_workout_reps_returns_parsed_list(monkeypatch):
     ui = create_ui()
+    monkeypatch.setattr("builtins.input", lambda _: "15 12 10")
 
-    assert ui.parse_reps("15 invalid 10") is None
-
-
-def test_parse_name_returns_capitalized_single_word():
-    ui = create_ui()
-
-    assert ui.parse_name(" pushups ") == "Pushups"
-
-
-def test_parse_name_returns_none_for_multiple_words():
-    ui = create_ui()
-
-    assert ui.parse_name("push ups") is None
-
-
-def test_parse_name_returns_none_for_non_alpha_characters():
-    ui = create_ui()
-
-    assert ui.parse_name("pushups1") is None
-
-
-def test_parse_reps_returns_none_for_empty_input():
-    ui = create_ui()
-
-    assert ui.parse_reps("   ") is None
-
-
-def test_parse_reps_returns_none_when_one_value_is_zero():
-    ui = create_ui()
-
-    assert ui.parse_reps("15 0 10") is None
-
-
-def test_parse_reps_returns_none_when_one_value_is_negative():
-    ui = create_ui()
-
-    assert ui.parse_reps("15 -2 10") is None
+    assert ui.input_workout_reps() == [15, 12, 10]
 
 
 def test_show_workouts_prints_empty_message(capsys):
@@ -152,7 +120,6 @@ def test_handle_search_workout_prints_matching_workouts(monkeypatch, capsys):
     ui.handle_search_workout()
 
     assert capsys.readouterr().out == (
-        "Found!\n"
         "Pushups - 15, 12 reps\n"
         "Pushups - 10 reps\n"
     )
@@ -230,7 +197,7 @@ def test_handle_filter_workouts_by_reps_prints_not_found(monkeypatch, capsys):
     assert capsys.readouterr().out == (
         "1. Filter for minimum total reps\n"
         "2. Filter for maximum total reps\n"
-        "No workouts found\n"
+        "Workout not found\n"
     )
 
 
