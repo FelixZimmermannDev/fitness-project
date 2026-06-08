@@ -6,9 +6,9 @@ from frontend.parsers import (
     parse_list,
 )
 from backend.workout_stats import WorkoutStats
-from frontend.formatters import format_workout
 from frontend.menus import show_menu, show_filter_menu
 from frontend.summary_view import SummaryView
+from frontend.workout_view import WorkoutView
 
 class TerminalUI:
 
@@ -16,10 +16,11 @@ class TerminalUI:
         self.tracker = tracker
         self.stats = WorkoutStats(tracker)
         self.summary = SummaryView(self.tracker, self.stats)
+        self.workout_view = WorkoutView()
 
     ## Menu
     def input_menu_choice(self):
-        return parse_choice(input("Enter menu choice: "), [1, 2, 3, 4, 5, 6, 7, 8])
+        return parse_choice(input("Enter menu choice: "), [1, 2, 3, 4, 5, 6, 7, 8, 9])
 
     def handle_menu_choice(self, choice):
         if choice == 1:
@@ -27,7 +28,7 @@ class TerminalUI:
         elif choice == 2:
             self.handle_remove_workout()
         elif choice == 3:
-            self.show_workouts()
+            self.workout_view.show_workouts(self.tracker.get_workouts())
         elif choice == 4:
             self.handle_update_workout()
         elif choice == 5:
@@ -36,16 +37,8 @@ class TerminalUI:
             self.handle_search_workout()
         elif choice == 8:
             self.handle_filter_workouts_by_reps()
-
-    def show_workouts(self):
-        print("Current workouts:")
-
-        if not self.tracker.has_workouts():
-            print("No current workouts")
-            return
-
-        for index, workout in enumerate(self.tracker.get_workouts(), start=1):
-            print(f"{index}. {format_workout(workout)}")
+        elif choice == 9:
+            self.handle_rename_workout()
 
     ## Add
     def input_workout_name(self):
@@ -75,7 +68,7 @@ class TerminalUI:
         return parse_index(input("Enter workout number to remove: "))
 
     def handle_remove_workout(self):
-        self.show_workouts()
+        self.workout_view.show_workouts(self.tracker.get_workouts())
 
         index = self.input_remove_workout()
 
@@ -88,13 +81,13 @@ class TerminalUI:
         else:
             print("Workout not found")
 
-    def input_update_workout(self):
+    def input_update_workout_index(self):
         return parse_index(input("Enter workout number to update: "))
 
     def handle_update_workout(self):
-        self.show_workouts()
+        self.workout_view.show_workouts(self.tracker.get_workouts())
 
-        index = self.input_update_workout()
+        index = self.input_update_workout_index()
 
         if index is None:
             print("Invalid workout number")
@@ -110,6 +103,32 @@ class TerminalUI:
             print("Workout updated!")
         else:
             print("Workout not found")
+
+    ## Rename
+    def input_rename_workout_index(self):
+        return parse_index(input("Enter workout number to rename: "))
+
+    def handle_rename_workout(self):
+        self.workout_view.show_workouts(self.tracker.get_workouts())
+
+        index = self.input_rename_workout_index()
+
+        if index is None:
+            print("Invalid workout number")
+            return
+
+        new_name = self.input_workout_name()
+
+        if new_name is None:
+            print("Invalid workout name")
+            return
+
+        if self.tracker.rename_workout(index, new_name):
+            print("Workout renamed!")
+
+        else:
+            print("Workout not found")
+
 
     ## Search
     def input_search_workout(self):
@@ -129,15 +148,7 @@ class TerminalUI:
 
         results = self.tracker.get_workouts_by_name(name)
 
-        self.show_workout_results(results)
-
-    def show_workout_results(self, results, empty_message="Workout not found"):
-        if len(results) == 0:
-            print(empty_message)
-            return
-
-        for workout in results:
-            print(format_workout(workout))
+        self.workout_view.show_workout_results(results)
 
     ## Filter
     def input_filter_total_reps(self):
@@ -166,7 +177,7 @@ class TerminalUI:
         else:
             results = self.tracker.get_workouts_with_max_total_reps(total_reps)
 
-        self.show_workout_results(results, empty_message="No workouts found")
+        self.workout_view.show_workout_results(results, empty_message="No workouts found")
 
     ## Flow
     def run(self):

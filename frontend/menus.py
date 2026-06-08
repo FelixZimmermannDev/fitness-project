@@ -10,6 +10,7 @@ def show_menu():
         print("6. Exit")
         print("7. Search workout")
         print("8. Filter by reps")
+        print("9. Rename workout")
 
 def show_filter_menu():
     print("1. Filter for minimum total reps")

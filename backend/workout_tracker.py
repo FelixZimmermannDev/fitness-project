@@ -21,7 +21,7 @@ class WorkoutTracker:
         return True
 
     ## Remove / Update
-    def has_valid_index(self, index):
+    def has_valid_index(self, index):   #Workout Liste hat Eintraege
         if index < 0:
             return False
 
@@ -42,6 +42,14 @@ class WorkoutTracker:
             return False
 
         self.workouts[index].reps = reps
+        return True
+
+    ## Rename
+    def rename_workout(self, index, new_name):
+        if not self.has_valid_index(index):
+            return False
+
+        self.workouts[index].name = new_name
         return True
 
     ## Search
@@ -92,3 +100,4 @@ class WorkoutTracker:
         results = self.get_workouts_with_max_total_reps(max_reps)
 
         return len(results) > 0
+

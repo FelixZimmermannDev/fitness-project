@@ -94,6 +94,26 @@ def test_update_workout_invalid_index():
     assert tracker.get_workouts()[0].reps == [15]
 
 
+def test_rename_workout():
+    tracker = WorkoutTracker()
+    tracker.add_workout("Pushups", [15])
+
+    result = tracker.rename_workout(0, "Pressups")
+
+    assert result is True
+    assert tracker.get_workouts()[0].name == "Pressups"
+
+
+def test_rename_workout_invalid_index():
+    tracker = WorkoutTracker()
+    tracker.add_workout("Pushups", [15])
+
+    result = tracker.rename_workout(5, "Pressups")
+
+    assert result is False
+    assert tracker.get_workouts()[0].name == "Pushups"
+
+
 def test_get_workouts_by_name_returns_matching_workouts():
     tracker = WorkoutTracker()
 

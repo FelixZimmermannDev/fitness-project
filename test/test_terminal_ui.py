@@ -10,14 +10,14 @@ def create_ui():
 
 def test_input_menu_choice_returns_valid_choice(monkeypatch):
     ui = create_ui()
-    monkeypatch.setattr("builtins.input", lambda _: "8")
+    monkeypatch.setattr("builtins.input", lambda _: "9")
 
-    assert ui.input_menu_choice() == 8
+    assert ui.input_menu_choice() == 9
 
 
 def test_input_menu_choice_returns_none_for_invalid_choice(monkeypatch):
     ui = create_ui()
-    monkeypatch.setattr("builtins.input", lambda _: "9")
+    monkeypatch.setattr("builtins.input", lambda _: "10")
 
     assert ui.input_menu_choice() is None
 
@@ -39,7 +39,7 @@ def test_input_workout_reps_returns_parsed_list(monkeypatch):
 def test_show_workouts_prints_empty_message(capsys):
     ui = create_ui()
 
-    ui.show_workouts()
+    ui.workout_view.show_workouts([])
 
     assert capsys.readouterr().out == (
         "Current workouts:\n"
@@ -52,7 +52,7 @@ def test_show_workouts_prints_numbered_workouts(capsys):
     tracker.add_workout("Pushups", [15, 12, 10])
     ui = TerminalUI(tracker)
 
-    ui.show_workouts()
+    ui.workout_view.show_workouts(tracker.get_workouts())
 
     assert capsys.readouterr().out == (
         "Current workouts:\n"
@@ -80,6 +80,7 @@ def test_show_menu_includes_search_and_filter_options(capsys):
         "6. Exit\n"
         "7. Search workout\n"
         "8. Filter by reps\n"
+        "9. Rename workout\n"
     )
 
 
@@ -95,6 +96,94 @@ def test_handle_menu_choice_shows_summary(monkeypatch):
     ui.handle_menu_choice(5)
 
     assert summary_calls == [True]
+
+
+def test_handle_menu_choice_renames_workout(monkeypatch):
+    ui = create_ui()
+    rename_calls = []
+    monkeypatch.setattr(
+        ui,
+        "handle_rename_workout",
+        lambda: rename_calls.append(True),
+    )
+
+    ui.handle_menu_choice(9)
+
+    assert rename_calls == [True]
+
+
+def test_input_rename_workout_index_returns_zero_based_index(monkeypatch):
+    ui = create_ui()
+    monkeypatch.setattr("builtins.input", lambda _: "2")
+
+    assert ui.input_rename_workout_index() == 1
+
+
+def test_handle_rename_workout_updates_name(monkeypatch, capsys):
+    tracker = WorkoutTracker()
+    tracker.add_workout("Pushups", [15])
+    ui = TerminalUI(tracker)
+    inputs = iter(["1", "pressups"])
+    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+
+    ui.handle_rename_workout()
+
+    assert tracker.get_workouts()[0].name == "Pressups"
+    assert capsys.readouterr().out == (
+        "Current workouts:\n"
+        "1. Pushups - 15 reps\n"
+        "Workout renamed!\n"
+    )
+
+
+def test_handle_rename_workout_rejects_invalid_index(monkeypatch, capsys):
+    tracker = WorkoutTracker()
+    tracker.add_workout("Pushups", [15])
+    ui = TerminalUI(tracker)
+    monkeypatch.setattr("builtins.input", lambda _: "abc")
+
+    ui.handle_rename_workout()
+
+    assert tracker.get_workouts()[0].name == "Pushups"
+    assert capsys.readouterr().out == (
+        "Current workouts:\n"
+        "1. Pushups - 15 reps\n"
+        "Invalid workout number\n"
+    )
+
+
+def test_handle_rename_workout_rejects_invalid_name(monkeypatch, capsys):
+    tracker = WorkoutTracker()
+    tracker.add_workout("Pushups", [15])
+    ui = TerminalUI(tracker)
+    inputs = iter(["1", "push ups"])
+    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+
+    ui.handle_rename_workout()
+
+    assert tracker.get_workouts()[0].name == "Pushups"
+    assert capsys.readouterr().out == (
+        "Current workouts:\n"
+        "1. Pushups - 15 reps\n"
+        "Invalid workout name\n"
+    )
+
+
+def test_handle_rename_workout_prints_not_found(monkeypatch, capsys):
+    tracker = WorkoutTracker()
+    tracker.add_workout("Pushups", [15])
+    ui = TerminalUI(tracker)
+    inputs = iter(["2", "pressups"])
+    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+
+    ui.handle_rename_workout()
+
+    assert tracker.get_workouts()[0].name == "Pushups"
+    assert capsys.readouterr().out == (
+        "Current workouts:\n"
+        "1. Pushups - 15 reps\n"
+        "Workout not found\n"
+    )
 
 
 def test_input_search_workout_formats_valid_name(monkeypatch):
