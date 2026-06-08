@@ -85,17 +85,20 @@ def test_show_summary_prints_totals_and_grouped_reps(capsys):
 
     ui.show_summary()
 
-    assert capsys.readouterr().out == (
-        "Total workouts: 3\n"
-        "Total reps: 57\n"
-        "Highest total reps in one workout: 27\n"
-        "Lowest total reps in one workout: 10\n"
-        "Highest total reps by name: 37\n"
-        "Lowest total reps by name: 20\n"
-        "\n"
-        "Pushups: 37 reps\n"
-        "Squats: 20 reps\n"
-    )
+    output = capsys.readouterr().out
+
+    assert "Total workouts: 3\n" in output
+    assert "Total reps: 57\n" in output
+    assert "Highest total reps in one workout: 27\n" in output
+    assert "Lowest total reps in one workout: 10\n" in output
+    assert "Highest total reps by name: 37\n" in output
+    assert "Lowest total reps by name: 20\n" in output
+    assert "Workout with highest total reps: <backend.workout.Workout object at " in output
+    assert "Workout with lowest total reps: <backend.workout.Workout object at " in output
+    assert "Workout with most sets: <backend.workout.Workout object at " in output
+    assert "Workout with fewest sets: <backend.workout.Workout object at " in output
+    assert "Pushups: 37 reps\n" in output
+    assert "Squats: 20 reps\n" in output
 
 
 def test_show_summary_prints_no_workouts_message(capsys):

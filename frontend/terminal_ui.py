@@ -132,6 +132,10 @@ class TerminalUI:
         lowest_total_reps = self.tracker.get_lowest_total_reps()
         highest_total_reps_by_name = self.tracker.get_highest_total_reps_by_name()
         lowest_total_reps_by_name = self.tracker.get_lowest_total_reps_by_name()
+        workout_with_highest_total_reps = self.tracker.get_workout_with_highest_total_reps()
+        workout_with_lowest_total_reps = self.tracker.get_workout_with_lowest_total_reps()
+        workout_with_most_sets = self.tracker.get_workout_with_most_sets()
+        workout_with_fewest_sets = self.tracker.get_workout_with_fewest_sets()
 
         print(f"Total workouts: {total_workouts}")
         print(f"Total reps: {total_reps}")
@@ -139,6 +143,10 @@ class TerminalUI:
         print(f"Lowest total reps in one workout: {lowest_total_reps}")
         print(f"Highest total reps by name: {highest_total_reps_by_name}")
         print(f"Lowest total reps by name: {lowest_total_reps_by_name}")
+        print(f"Workout with highest total reps: {workout_with_highest_total_reps}")
+        print(f"Workout with lowest total reps: {workout_with_lowest_total_reps}")
+        print(f"Workout with most sets: {workout_with_most_sets}")
+        print(f"Workout with fewest sets: {workout_with_fewest_sets}")
         print()
 
         summary = self.tracker.get_total_reps_by_name()
@@ -207,8 +215,6 @@ class TerminalUI:
             results = self.tracker.get_workouts_with_max_total_reps(total_reps)
 
         self.show_workout_results(results, empty_message="No workouts found")
-
-
 
     #Flow
     def run(self):

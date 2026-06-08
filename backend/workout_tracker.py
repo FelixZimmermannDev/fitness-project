@@ -192,3 +192,35 @@ class WorkoutTracker:
                 lowest_workout = workout
 
         return lowest_workout
+
+    def get_workout_with_most_sets(self):
+        if not self.has_workouts():
+            return None
+
+        most_sets = 0
+        best_workout = None
+
+        for workout in self.workouts:
+            set_count = len(workout.reps)
+
+            if set_count > most_sets:
+                most_sets = set_count
+                best_workout = workout
+
+        return best_workout
+
+    def get_workout_with_fewest_sets(self):
+        if not self.has_workouts():
+            return None
+
+        fewest_sets = len(self.workouts[0].reps)
+        worst_workout = self.workouts[0]
+
+        for workout in self.workouts:
+            set_count = len(workout.reps)
+
+            if set_count < fewest_sets:
+                fewest_sets = set_count
+                worst_workout = workout
+
+        return worst_workout
