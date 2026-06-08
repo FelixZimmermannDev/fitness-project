@@ -1,4 +1,3 @@
-from backend import workout
 from backend.workout import Workout
 
 class WorkoutTracker:
@@ -112,13 +111,16 @@ class WorkoutTracker:
 
         return results
 
-    def has_workout_with_max_total_reps(self, max_reps):
+    def has_workouts_with_max_total_reps(self, max_reps):
         results = self.get_workouts_with_max_total_reps(max_reps)
 
         return len(results) > 0
 
     #Highest_Rep
     def get_highest_total_reps(self):
+        if not self.has_workouts():
+            return None
+
         highest = 0
 
         for workout in self.workouts:
@@ -139,7 +141,7 @@ class WorkoutTracker:
     #Lowest_Rep
     def get_lowest_total_reps(self):
         if not self.has_workouts():
-            return None #if get_lowest is None...
+            return None
 
         lowest = sum(self.workouts[0].reps)
 
@@ -157,3 +159,36 @@ class WorkoutTracker:
 
         summary = self.get_total_reps_by_name()
         return min(summary.values())
+
+    #Drill 4 - Get Highest Workout
+    def get_workout_with_highest_total_reps(self):
+        if not self.has_workouts():
+            return None
+
+        highest = 0
+        best_workout = None
+
+        for workout in self.workouts:
+            total = sum(workout.reps)   #Jeder Eintrag in Liste wird summiert
+
+            if total > highest:
+                highest = total
+                best_workout = workout
+
+        return best_workout
+
+    def get_workout_with_lowest_total_reps(self):
+        if not self.has_workouts():
+            return None
+
+        lowest = sum(self.workouts[0].reps)
+        lowest_workout = self.workouts[0]
+
+        for workout in self.workouts:
+            total = sum(workout.reps)
+
+            if total < lowest:
+                lowest = total
+                lowest_workout = workout
+
+        return lowest_workout

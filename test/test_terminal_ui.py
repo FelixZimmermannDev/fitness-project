@@ -88,10 +88,22 @@ def test_show_summary_prints_totals_and_grouped_reps(capsys):
     assert capsys.readouterr().out == (
         "Total workouts: 3\n"
         "Total reps: 57\n"
+        "Highest total reps in one workout: 27\n"
+        "Lowest total reps in one workout: 10\n"
+        "Highest total reps by name: 37\n"
+        "Lowest total reps by name: 20\n"
         "\n"
         "Pushups: 37 reps\n"
         "Squats: 20 reps\n"
     )
+
+
+def test_show_summary_prints_no_workouts_message(capsys):
+    ui = create_ui()
+
+    ui.show_summary()
+
+    assert capsys.readouterr().out == "No workouts available\n"
 
 
 def test_input_search_workout_formats_valid_name(monkeypatch):
@@ -197,7 +209,7 @@ def test_handle_filter_workouts_by_reps_prints_not_found(monkeypatch, capsys):
     assert capsys.readouterr().out == (
         "1. Filter for minimum total reps\n"
         "2. Filter for maximum total reps\n"
-        "Workout not found\n"
+        "No workouts found\n"
     )
 
 

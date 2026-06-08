@@ -85,13 +85,11 @@ class TerminalUI:
     def handle_remove_workout(self):
         self.show_workouts()
 
-        number = self.input_remove_workout()
+        index = self.input_remove_workout()
 
-        if number is None:
+        if index is None:
             print("Invalid workout number")
             return
-
-        index = number - 1
 
         if self.tracker.remove_workout(index):
             print("Workout removed!")
@@ -105,9 +103,9 @@ class TerminalUI:
     def handle_update_workout(self):
         self.show_workouts()
 
-        number = self.input_update_workout()
+        index = self.input_update_workout()
 
-        if number is None:
+        if index is None:
             print("Invalid workout number")
             return
 
@@ -117,8 +115,6 @@ class TerminalUI:
             print("Invalid Reps")
             return
 
-        index = number - 1
-
         if self.tracker.update_workout(index, reps):
             print("Workout updated!")
         else:
@@ -126,11 +122,23 @@ class TerminalUI:
 
     #Summary_Workout
     def show_summary(self):
+        if not self.tracker.has_workouts():
+            print("No workouts available")
+            return
+
         total_workouts = self.tracker.get_total_workouts()
         total_reps = self.tracker.get_total_reps()
+        highest_total_reps = self.tracker.get_highest_total_reps()
+        lowest_total_reps = self.tracker.get_lowest_total_reps()
+        highest_total_reps_by_name = self.tracker.get_highest_total_reps_by_name()
+        lowest_total_reps_by_name = self.tracker.get_lowest_total_reps_by_name()
 
         print(f"Total workouts: {total_workouts}")
         print(f"Total reps: {total_reps}")
+        print(f"Highest total reps in one workout: {highest_total_reps}")
+        print(f"Lowest total reps in one workout: {lowest_total_reps}")
+        print(f"Highest total reps by name: {highest_total_reps_by_name}")
+        print(f"Lowest total reps by name: {lowest_total_reps_by_name}")
         print()
 
         summary = self.tracker.get_total_reps_by_name()
@@ -158,9 +166,9 @@ class TerminalUI:
 
         self.show_workout_results(results)
 
-    def show_workout_results(self, results):
+    def show_workout_results(self, results, empty_message="Workout not found"):
         if len(results) == 0:
-            print("Workout not found")
+            print(empty_message)
             return
 
         for workout in results:
@@ -198,7 +206,9 @@ class TerminalUI:
         else:
             results = self.tracker.get_workouts_with_max_total_reps(total_reps)
 
-        self.show_workout_results(results)
+        self.show_workout_results(results, empty_message="No workouts found")
+
+
 
     #Flow
     def run(self):

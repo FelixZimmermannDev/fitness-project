@@ -75,17 +75,17 @@ def parse_choice(user_input, allowed_choices):
     return choice
 
 #Yes or No Auswahl
+##change
 def parse_yes_no(user_input):
     answer = parse_name(user_input)
 
-    if answer in ["yes", "y", "Yes", "YES"]:    #Macht hier nur sinn yes or y zu nemen da parse_name schon stripplt und lowered
+    if answer in ["Yes", "Y"]:
         return True
 
-    if answer in ["no", "n", "No", "NO"]:
+    if answer in ["No", "N"]:
         return False
 
     return None
-    #Nutzung dann if parse_yes_no is True, dann yes und False, dann no?
 
 #Parse_Text
 def parse_text(user_input):

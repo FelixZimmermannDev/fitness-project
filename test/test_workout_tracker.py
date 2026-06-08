@@ -227,34 +227,45 @@ def test_has_workouts_with_min_total_reps():
     assert tracker.has_workouts_with_min_total_reps(40) is False
 
 
-def test_has_workout_with_max_total_reps():
+def test_has_workouts_with_max_total_reps():
     tracker = WorkoutTracker()
 
     tracker.add_workout("Push", [10, 10, 5])
     tracker.add_workout("Pull", [8, 8])
 
-    assert tracker.has_workout_with_max_total_reps(20) is True
-    assert tracker.has_workout_with_max_total_reps(10) is False
+    assert tracker.has_workouts_with_max_total_reps(20) is True
+    assert tracker.has_workouts_with_max_total_reps(10) is False
 
 
-def test_has_workouts_with_min_total_reps():
+def test_get_highest_total_reps_returns_none_when_empty():
     tracker = WorkoutTracker()
 
-    tracker.add_workout("Push", [10, 10, 5])
-    tracker.add_workout("Pull", [8, 8])
-
-    assert tracker.has_workouts_with_min_total_reps(20) is True
-    assert tracker.has_workouts_with_min_total_reps(40) is False
+    assert tracker.get_highest_total_reps() is None
 
 
-def test_has_workout_with_max_total_reps_alias():
+def test_get_lowest_total_reps_returns_none_when_empty():
     tracker = WorkoutTracker()
 
-    tracker.add_workout("Push", [10, 10, 5])
-    tracker.add_workout("Pull", [8, 8])
+    assert tracker.get_lowest_total_reps() is None
 
-    assert tracker.has_workout_with_max_total_reps(20) is True
-    assert tracker.has_workout_with_max_total_reps(10) is False
+
+def test_get_highest_total_reps_by_name_returns_none_when_empty():
+    tracker = WorkoutTracker()
+
+    assert tracker.get_highest_total_reps_by_name() is None
+
+
+def test_get_lowest_total_reps_by_name_returns_none_when_empty():
+    tracker = WorkoutTracker()
+
+    assert tracker.get_lowest_total_reps_by_name() is None
+
+
+def test_get_workout_with_highest_total_reps_returns_none_when_empty():
+    tracker = WorkoutTracker()
+
+    assert tracker.get_workout_with_highest_total_reps() is None
+
 
 def test_highest_and_lowest_total_reps():
     tracker = WorkoutTracker()
@@ -276,3 +287,41 @@ def test_highest_and_lowest_total_reps_by_name():
 
     assert tracker.get_highest_total_reps_by_name() == 25
     assert tracker.get_lowest_total_reps_by_name() == 12
+
+
+def test_get_workout_with_highest_total_reps_returns_workout():
+    tracker = WorkoutTracker()
+
+    tracker.add_workout("Push", [10, 10, 5])
+    tracker.add_workout("Pull", [8, 8])
+    tracker.add_workout("Legs", [12, 12, 12])
+
+    workout = tracker.get_workout_with_highest_total_reps()
+
+    assert workout is not None
+    assert workout.name == "Legs"
+    assert workout.reps == [12, 12, 12]
+
+def test_get_workout_with_lowest_total_reps_when_first_is_lowest():
+    tracker = WorkoutTracker()
+
+    tracker.add_workout("Push", [5])
+    tracker.add_workout("Pull", [10])
+    tracker.add_workout("Legs", [12])
+
+    workout = tracker.get_workout_with_lowest_total_reps()
+
+    assert workout.name == "Push"
+    assert workout.reps == [5]
+
+def test_get_workout_with_lowest_total_reps():
+    tracker = WorkoutTracker()
+
+    tracker.add_workout("Push", [10, 10])
+    tracker.add_workout("Pull", [5])
+    tracker.add_workout("Legs", [12, 12])
+
+    workout = tracker.get_workout_with_lowest_total_reps()
+
+    assert workout.name == "Pull"
+    assert workout.reps == [5]

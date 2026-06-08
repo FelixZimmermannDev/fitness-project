@@ -49,5 +49,6 @@ def test_parse_text_returns_none_for_blank_input():
 
 def test_parse_yes_no_accepts_common_inputs():
     assert parse_yes_no("yes") is True
-    assert parse_yes_no("n") is None
+    assert parse_yes_no("y") is True
+    assert parse_yes_no("n") is False
     assert parse_yes_no("maybe") is None
