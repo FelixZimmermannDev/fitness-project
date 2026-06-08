@@ -1,4 +1,6 @@
 from backend.workout_tracker import WorkoutTracker
+from frontend.formatters import format_workout
+from frontend.menus import show_filter_menu, show_menu
 from frontend.terminal_ui import TerminalUI
 
 
@@ -61,15 +63,12 @@ def test_show_workouts_prints_numbered_workouts(capsys):
 def test_format_workout_returns_display_text():
     tracker = WorkoutTracker()
     tracker.add_workout("Pushups", [15, 12, 10])
-    ui = TerminalUI(tracker)
 
-    assert ui.format_workout(tracker.get_workouts()[0]) == "Pushups - 15, 12, 10 reps"
+    assert format_workout(tracker.get_workouts()[0]) == "Pushups - 15, 12, 10 reps"
 
 
 def test_show_menu_includes_search_and_filter_options(capsys):
-    ui = create_ui()
-
-    ui.show_menu()
+    show_menu()
 
     assert capsys.readouterr().out == (
         "Welcome to the Terminal UI!\n\n"
@@ -84,37 +83,18 @@ def test_show_menu_includes_search_and_filter_options(capsys):
     )
 
 
-def test_show_summary_prints_totals_and_grouped_reps(capsys):
-    tracker = WorkoutTracker()
-    tracker.add_workout("Pushups", [15, 12])
-    tracker.add_workout("Pushups", [10])
-    tracker.add_workout("Squats", [20])
-    ui = TerminalUI(tracker)
-
-    ui.show_summary()
-
-    output = capsys.readouterr().out
-
-    assert "Total workouts: 3\n" in output
-    assert "Total reps: 57\n" in output
-    assert "Highest total reps in one workout: 27\n" in output
-    assert "Lowest total reps in one workout: 10\n" in output
-    assert "Highest total reps by name: 37\n" in output
-    assert "Lowest total reps by name: 20\n" in output
-    assert "Workout with highest total reps: Pushups - 15, 12 reps\n" in output
-    assert "Workout with lowest total reps: Pushups - 10 reps\n" in output
-    assert "Workout with most sets: Pushups - 15, 12 reps\n" in output
-    assert "Workout with fewest sets: Pushups - 10 reps\n" in output
-    assert "Pushups: 37 reps\n" in output
-    assert "Squats: 20 reps\n" in output
-
-
-def test_show_summary_prints_no_workouts_message(capsys):
+def test_handle_menu_choice_shows_summary(monkeypatch):
     ui = create_ui()
+    summary_calls = []
+    monkeypatch.setattr(
+        ui.summary,
+        "show_summary",
+        lambda: summary_calls.append(True),
+    )
 
-    ui.show_summary()
+    ui.handle_menu_choice(5)
 
-    assert capsys.readouterr().out == "No workouts available\n"
+    assert summary_calls == [True]
 
 
 def test_input_search_workout_formats_valid_name(monkeypatch):
@@ -160,9 +140,7 @@ def test_handle_search_workout_prints_not_found(monkeypatch, capsys):
 
 
 def test_show_filter_menu_prints_filter_options(capsys):
-    ui = create_ui()
-
-    ui.show_filter_menu()
+    show_filter_menu()
 
     assert capsys.readouterr().out == (
         "1. Filter for minimum total reps\n"

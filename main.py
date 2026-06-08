@@ -1,4 +1,3 @@
-
 from backend.workout_tracker import WorkoutTracker
 from frontend.terminal_ui import TerminalUI
 

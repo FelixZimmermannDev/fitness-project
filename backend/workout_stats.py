@@ -1,15 +1,18 @@
-#Auswertung von Workouts
+#Auswertung von Daten
 
 class WorkoutStats:
 
     def __init__(self, tracker):
         self.tracker = tracker
 
+    ## Helpers
     def has_workouts(self):
         return self.tracker.has_workouts()
 
     def get_workouts(self):
         return self.tracker.get_workouts()
+
+    ## Totals
     def get_total_workouts(self):
         return len(self.get_workouts())
 
@@ -20,6 +23,8 @@ class WorkoutStats:
             total += sum(workout.reps)
 
         return total
+
+    ## By Name
     def get_total_reps_by_name(self):
         summary = {}
 
@@ -31,6 +36,21 @@ class WorkoutStats:
 
         return summary
 
+    def get_highest_total_reps_by_name(self):
+        if not self.has_workouts():
+            return None
+
+        summary = self.get_total_reps_by_name()
+        return max(summary.values())
+
+    def get_lowest_total_reps_by_name(self):
+        if not self.has_workouts():
+            return None
+
+        summary = self.get_total_reps_by_name()
+        return min(summary.values())
+
+    ## By Reps
     def get_highest_total_reps(self):
         if not self.has_workouts():
             return None
@@ -44,12 +64,6 @@ class WorkoutStats:
                 highest = total
 
         return highest
-    def get_highest_total_reps_by_name(self):
-        if not self.has_workouts():
-            return None
-
-        summary = self.get_total_reps_by_name()
-        return max(summary.values())
 
     def get_lowest_total_reps(self):
         if not self.has_workouts():
@@ -64,13 +78,8 @@ class WorkoutStats:
                 lowest = total
 
         return lowest
-    def get_lowest_total_reps_by_name(self):
-        if not self.has_workouts():
-            return None
 
-        summary = self.get_total_reps_by_name()
-        return min(summary.values())
-
+    ## Workout Selection
     def get_workout_with_highest_total_reps(self):
         if not self.has_workouts():
             return None
@@ -86,6 +95,7 @@ class WorkoutStats:
                 best_workout = workout
 
         return best_workout
+
     def get_workout_with_lowest_total_reps(self):
         if not self.has_workouts():
             return None
@@ -102,6 +112,7 @@ class WorkoutStats:
 
         return lowest_workout
 
+    ## Set Selection
     def get_workout_with_most_sets(self):
         if not self.has_workouts():
             return None
@@ -117,6 +128,7 @@ class WorkoutStats:
                 best_workout = workout
 
         return best_workout
+
     def get_workout_with_fewest_sets(self):
         if not self.has_workouts():
             return None

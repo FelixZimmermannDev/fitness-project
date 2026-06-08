@@ -6,25 +6,18 @@ from frontend.parsers import (
     parse_list,
 )
 from backend.workout_stats import WorkoutStats
+from frontend.formatters import format_workout
+from frontend.menus import show_menu, show_filter_menu
+from frontend.summary_view import SummaryView
 
 class TerminalUI:
 
     def __init__(self, tracker):
         self.tracker = tracker
         self.stats = WorkoutStats(tracker)
+        self.summary = SummaryView(self.tracker, self.stats)
 
-    #Menu
-    def show_menu(self):
-        print("Welcome to the Terminal UI!\n")
-        print("1. Add workout")
-        print("2. Remove workout")
-        print("3. Show workouts")
-        print("4. Change workouts")
-        print("5. Show summary")
-        print("6. Exit")
-        print("7. Search workout")
-        print("8. Filter by reps")
-
+    ## Menu
     def input_menu_choice(self):
         return parse_choice(input("Enter menu choice: "), [1, 2, 3, 4, 5, 6, 7, 8])
 
@@ -38,13 +31,12 @@ class TerminalUI:
         elif choice == 4:
             self.handle_update_workout()
         elif choice == 5:
-            self.show_summary()
+            self.summary.show_summary()
         elif choice == 7:
             self.handle_search_workout()
         elif choice == 8:
             self.handle_filter_workouts_by_reps()
 
-    #Show_Workouts
     def show_workouts(self):
         print("Current workouts:")
 
@@ -53,10 +45,9 @@ class TerminalUI:
             return
 
         for index, workout in enumerate(self.tracker.get_workouts(), start=1):
-            reps_text = ", ".join(str(rep) for rep in workout.reps)
-            print(f"{index}. {self.format_workout(workout)}")
+            print(f"{index}. {format_workout(workout)}")
 
-    #Add_Workout
+    ## Add
     def input_workout_name(self):
         return parse_name(input("Enter workout name: "))
 
@@ -79,7 +70,7 @@ class TerminalUI:
         self.tracker.add_workout(name, reps)
         print("Workout added!")
 
-    #Remove_Workout
+    ## Remove / Update
     def input_remove_workout(self):
         return parse_index(input("Enter workout number to remove: "))
 
@@ -97,7 +88,6 @@ class TerminalUI:
         else:
             print("Workout not found")
 
-    #Update_Workout
     def input_update_workout(self):
         return parse_index(input("Enter workout number to update: "))
 
@@ -121,41 +111,7 @@ class TerminalUI:
         else:
             print("Workout not found")
 
-    #Summary_Workout
-    def show_summary(self):
-        if not self.tracker.has_workouts():
-            print("No workouts available")
-            return
-
-        total_workouts = self.stats.get_total_workouts()
-        total_reps = self.stats.get_total_reps()
-        highest_total_reps = self.stats.get_highest_total_reps()
-        lowest_total_reps = self.stats.get_lowest_total_reps()
-        highest_total_reps_by_name = self.stats.get_highest_total_reps_by_name()
-        lowest_total_reps_by_name = self.stats.get_lowest_total_reps_by_name()
-        workout_with_highest_total_reps = self.stats.get_workout_with_highest_total_reps()
-        workout_with_lowest_total_reps = self.stats.get_workout_with_lowest_total_reps()
-        workout_with_most_sets = self.stats.get_workout_with_most_sets()
-        workout_with_fewest_sets = self.stats.get_workout_with_fewest_sets()
-
-        print(f"Total workouts: {total_workouts}")
-        print(f"Total reps: {total_reps}")
-        print(f"Highest total reps in one workout: {highest_total_reps}")
-        print(f"Lowest total reps in one workout: {lowest_total_reps}")
-        print(f"Highest total reps by name: {highest_total_reps_by_name}")
-        print(f"Lowest total reps by name: {lowest_total_reps_by_name}")
-        print(f"Workout with highest total reps: {self.format_workout(workout_with_highest_total_reps)}")
-        print(f"Workout with lowest total reps: {self.format_workout(workout_with_lowest_total_reps)}")
-        print(f"Workout with most sets: {self.format_workout(workout_with_most_sets)}")
-        print(f"Workout with fewest sets: {self.format_workout(workout_with_fewest_sets)}")
-        print()
-
-        summary = self.stats.get_total_reps_by_name()
-
-        for name, reps in summary.items():
-            print(f"{name}: {reps} reps")
-
-    #Search_Workout
+    ## Search
     def input_search_workout(self):
         name = self.input_workout_name()
 
@@ -181,17 +137,9 @@ class TerminalUI:
             return
 
         for workout in results:
-            print(self.format_workout(workout))
+            print(format_workout(workout))
 
-    def format_workout(self, workout):
-        reps_text = ", ".join(str(rep) for rep in workout.reps)
-        return f"{workout.name} - {reps_text} reps"
-
-    #Filter_Reps
-    def show_filter_menu(self):
-        print("1. Filter for minimum total reps")
-        print("2. Filter for maximum total reps")
-
+    ## Filter
     def input_filter_total_reps(self):
         return parse_positive_amount(input("Enter total reps: "))
 
@@ -199,7 +147,7 @@ class TerminalUI:
         return parse_choice(input("Enter choice: "), [1, 2])
 
     def handle_filter_workouts_by_reps(self):
-        self.show_filter_menu()
+        show_filter_menu()
 
         choice = self.input_filter_choice()
 
@@ -220,10 +168,10 @@ class TerminalUI:
 
         self.show_workout_results(results, empty_message="No workouts found")
 
-    #Flow
+    ## Flow
     def run(self):
         while True:
-            self.show_menu()
+            show_menu()
             choice = self.input_menu_choice()
 
             if choice is None:
