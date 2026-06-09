@@ -6,7 +6,7 @@ class WorkoutTracker:
     def __init__(self):
         self.workouts = []
 
-    ## Workouts
+    ## Helpers
     def get_workouts(self):
         return self.workouts
 
@@ -73,7 +73,7 @@ class WorkoutTracker:
         results = []
 
         for workout in self.workouts:
-            total_reps = sum(workout.reps)
+            total_reps = workout.get_total_reps()
 
             if total_reps >= min_reps:
                 results.append(workout)
@@ -89,7 +89,7 @@ class WorkoutTracker:
         results = []
 
         for workout in self.workouts:
-            total_reps = sum(workout.reps)
+            total_reps = workout.get_total_reps()
 
             if total_reps <= max_reps:
                 results.append(workout)
@@ -100,4 +100,3 @@ class WorkoutTracker:
         results = self.get_workouts_with_max_total_reps(max_reps)
 
         return len(results) > 0
-

@@ -1,8 +1,10 @@
 #Auswertung von Daten
+from backend import workout
+
 
 class WorkoutStats:
 
-    def __init__(self, tracker):
+    def __init__(self, tracker, reps):
         self.tracker = tracker
 
     ## Helpers
@@ -20,7 +22,7 @@ class WorkoutStats:
         total = 0
 
         for workout in self.get_workouts():
-            total += sum(workout.reps)
+            total += self.tracker.get_total_reps()
 
         return total
 
@@ -32,7 +34,7 @@ class WorkoutStats:
             if workout.name not in summary:
                 summary[workout.name] = 0
 
-            summary[workout.name] += sum(workout.reps)
+            summary[workout.name] += workout.get_total_reps()
 
         return summary
 
@@ -58,7 +60,7 @@ class WorkoutStats:
         highest = 0
 
         for workout in self.get_workouts():
-            total = sum(workout.reps)
+            total = workout.get_total_reps()
 
             if total > highest:
                 highest = total
@@ -72,7 +74,7 @@ class WorkoutStats:
         lowest = sum(self.get_workouts()[0].reps)
 
         for workout in self.get_workouts():
-            total = sum(workout.reps)
+            total = workout.get_total_reps()
 
             if total < lowest:
                 lowest = total
@@ -88,7 +90,7 @@ class WorkoutStats:
         best_workout = None
 
         for workout in self.get_workouts():
-            total = sum(workout.reps)
+            total = workout.get_total_reps()
 
             if total > highest:
                 highest = total
@@ -104,7 +106,7 @@ class WorkoutStats:
         lowest_workout = self.get_workouts()[0]
 
         for workout in self.get_workouts():
-            total = sum(workout.reps)
+            total = workout.get_total_reps()
 
             if total < lowest:
                 lowest = total
